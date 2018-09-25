@@ -1,0 +1,6 @@
+node_modules
+# Production Files
+*_prod* 
+
+# Local development files
+*_dev*
