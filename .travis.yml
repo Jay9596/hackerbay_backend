@@ -6,8 +6,13 @@ node_js:
 install:
   # - npm install -g codecov
 
+dist: trusty
+
 services:
-  - postgresql
+  - postgres
+
+addons:
+  postgresql: "9.5"
 
 before_script:
   - psql --version
@@ -16,7 +21,9 @@ before_script:
 
 env:
   global:
-  - PGPORT=5433
+  - PGPORT=5432qa
+  - PGHOST=localhost
+  - NODE_ENV=test
   # - CODECOV_TOKEN="fe328c6a-8a8d-4f41-9936-793d08b8666c"
  
 script:

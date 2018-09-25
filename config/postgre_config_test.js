@@ -3,5 +3,5 @@ module.exports = {
   user: "postgres",
   password: "",
   // host: "localhost", 
-  port: 5433
+  port: 5432
 };
