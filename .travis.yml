@@ -4,19 +4,21 @@ node_js:
   - "node"
 
 install:
-  - npm install -g codecov
+  # - npm install -g codecov
 
 services:
   - postgresql
 
 before_script:
+  - psql --version
+  - service postgresql status
   - psql -U postgres -c 'create database test_db;'
 
 env:
   global:
   - PGPORT=5433
-  - CODECOV_TOKEN="fe328c6a-8a8d-4f41-9936-793d08b8666c"
+  # - CODECOV_TOKEN="fe328c6a-8a8d-4f41-9936-793d08b8666c"
  
 script:
   - npm test
-  - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec && codecov
+  # - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec && codecov
