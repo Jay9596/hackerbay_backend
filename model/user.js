@@ -9,7 +9,7 @@ const sequelize = new Sequelize(config.database, config.user, config.password, {
 });
 
 const UserModel = sequelize.define(
-  "user",
+  "users",
   {
     email: {
       type: Sequelize.STRING,
