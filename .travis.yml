@@ -4,9 +4,10 @@ node_js:
   - "node"
 
 install:
+  - npm install
   - npm install -g codecov
   - npm install -g istanbul
-  - npm install
+  - npm install -g nyc
 
 dist: trusty
 
@@ -23,11 +24,14 @@ before_script:
 
 env:
   global:
-  - PGPORT=5432
-  - PGHOST=localhost
-  - NODE_ENV=test
-  - CODECOV_TOKEN="1249e0cb-c965-4941-9efa-402a14f459a8"
- 
+    - PGPORT=5432
+    - PGHOST=localhost
+    - NODE_ENV=test
+    - CODECOV_TOKEN="1249e0cb-c965-4941-9efa-402a14f459a8"
+
 script:
   - npm test
-  - istanbul cover _mocha --reporter lcovonly -- -R spec && codecov
+  - nyc npm test
+  - nyc report --reporter=text-lcov > coverage.lcov
+  - codecov
+  # - istanbul cover ./node_modules/mocha/bin/_mocha -- --reporter lcovonly -- -R spec && codecov
