@@ -19,8 +19,3 @@ if (node_env == "prod") {
     postgre_config: require("./postgre_config_prod")
   };
 }
-
-module.exports = {
-  secret: require("./secret_test"),
-  postgre_config: require("./postgre_config_test")
-};
