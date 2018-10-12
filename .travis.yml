@@ -1,0 +1,39 @@
+language: node_js
+
+node_js:
+  - "node"
+
+install:
+  - npm install
+  - npm install -g sequelize-cli
+  - npm install -g codecov
+  # - npm install -g istanbul
+  - npm install -g nyc
+
+dist: trusty
+
+services:
+  - postgres
+
+addons:
+  postgresql: "9.5"
+
+before_script:
+  # - psql --version
+  # - service postgresql status
+  - psql -U postgres -c 'create database test_db;'
+  - sequelize db:migrate
+
+env:
+  global:
+    - PGPORT=5432
+    - PGHOST=localhost
+    - NODE_ENV=test
+    - CODECOV_TOKEN="1249e0cb-c965-4941-9efa-402a14f459a8"
+
+script:
+  # - npm test
+  - nyc npm test
+  - nyc report --reporter=text-lcov > coverage.lcov
+  - codecov
+  # - istanbul cover ./node_modules/mocha/bin/_mocha -- --reporter lcovonly -- -R spec && codecov
