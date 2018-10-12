@@ -2,25 +2,30 @@
 const Op = require("sequelize").Op;
 var router = require("express").Router();
 var jwt = require("jsonwebtoken");
+const isURL = require("is-url").isURL;
 var Website = require("../model/website");
 var secretKey = require("../config").secret.secretKey;
 
 router.post("/add", (req, res) => {
-  const auth = req.headers["authorization"];
-  const token = auth.split(" ")[1];
-
   let userID;
-  jwt.verify(token, secretKey, (err, decoded) => {
-    if (err) {
-      res.status(401).json({ error: "Unauthorized" });
-    }
-    userID = decoded;
-  });
+  const auth = req.headers["authorization"];
+  if (!auth) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  } else {
+    const token = auth.split(" ")[1];
+    jwt.verify(token, secretKey, (err, decoded) => {
+      if (err) {
+        res.status(401).json({ error: "Unauthorized" });
+      }
+      userID = decoded;
+    });
+  }
   if (!userID) {
     res.status(401).json({ error: "Unauthorized" });
     return;
   } else if (!req.body.name || !req.body.url) {
-    res.status(400).json({ error: "Enter proper name and URL" });
+    res.status(400).json({ error: "No Name or URL provided" });
     return;
   } else {
     Website.findOne({
@@ -29,8 +34,12 @@ router.post("/add", (req, res) => {
       }
     }).then(site => {
       if (site) {
-        res.status(400).json({ error: "Website already exists" });
+        res
+          .status(400)
+          .json({ error: "Website already exists with Name or URL" });
         return;
+      } else if (!isURL(req.body.url)) {
+        res.status(400).json({ error: "Invalid URL" });
       } else {
         Website.create({
           name: req.body.name,
@@ -58,16 +67,21 @@ router.post("/add", (req, res) => {
 });
 
 router.get("/list", (req, res) => {
-  const auth = req.headers["authorization"];
-  const token = auth.split(" ")[1];
-
   let userID;
-  jwt.verify(token, secretKey, (err, decoded) => {
-    if (err) {
-      res.status(401).json({ error: "Unauthorized" });
-    }
-    userID = decoded;
-  });
+  const auth = req.headers["authorization"];
+  if (!auth) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  } else {
+    const token = auth.split(" ")[1];
+
+    jwt.verify(token, secretKey, (err, decoded) => {
+      if (err) {
+        res.status(401).json({ error: "Unauthorized" });
+      }
+      userID = decoded;
+    });
+  }
   if (!userID) {
     res.status(401).json({ error: "Unauthorized" });
     return;

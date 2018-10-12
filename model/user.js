@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("./index");
 
 const UserModel = sequelize.define(
-  "user",
+  "users",
   {
     email: {
       type: Sequelize.STRING,

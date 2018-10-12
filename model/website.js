@@ -1,4 +1,5 @@
-const sequelize = require("./index");const Sequelize = require("sequelize");
+const sequelize = require("./index");
+const Sequelize = require("sequelize");
 const User = require("./user");
 const Website = sequelize.define("websites", {
   name: {
